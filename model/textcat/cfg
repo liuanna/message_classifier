@@ -2,21 +2,21 @@
   "exclusive_classes":true,
   "architecture":"simple_cnn",
   "labels":[
-    "INSURANCE",
-    "ACCOUNT_LINKING",
-    "BILLS",
-    "DEBT",
-    "INVESTING",
-    "CHARGES",
-    "BUDGET",
+    "FINANCIAL_PLANNING",
     "CANCELLATION",
-    "SPENDING",
-    "APP_GENERAL",
-    "FINANCIAL_TIPS",
+    "INSURANCE",
+    "BILLS",
     "SAVING",
-    "NOT_SUPPORTED_ADVICE",
+    "DEBT",
+    "ACCOUNT_LINKING",
     "CASH_TRANSFER",
-    "FINANCIAL_PLANNING"
+    "CHARGES",
+    "SPENDING",
+    "BUDGET",
+    "APP_GENERAL",
+    "INVESTING",
+    "FINANCIAL_TIPS",
+    "NOT_SUPPORTED_ADVICE"
   ],
   "pretrained_vectors":null
 }

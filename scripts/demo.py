@@ -13,7 +13,7 @@ def load_data(input_path):
 
 if __name__ == '__main__':
     data, labels = load_data("data/trainingSet.json")
-    classifier = MessageClassifier()
-    classifier.train(data, labels, use_model=True)
+    classifier = MessageClassifier(n_iter=20)
+    classifier.train(data, labels, use_model=False)
     new_messages = ["how to save more money?", "how to spend less in credit card?"]
-    classifier.predict(new_messages)
+    print(classifier.predict(new_messages))
