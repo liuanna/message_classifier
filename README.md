@@ -23,14 +23,14 @@ SPENDING
 ```
 
 ## Installation
-1) Clone this repository to your local and navigate into the package in the command line tool
+1) Clone this repository to your local and navigate into the package where the `setup.py` locates in the command line tool
 2) Run the following line to install the package
 ```shell script
 python setup.py install
 ```
 
 ## Quick Start
-Loading packages
+**Loading packages**
 ```python
 import json
 import random
@@ -47,13 +47,20 @@ def load_data(input_path):
     messages, labels = zip(*train_data)
     return messages, labels
 ```
-Train the model
+**Train the model**
+
+Parameters:
+* `data`: a list of message strings `['message1', 'message2', ...]`
+* `label`: a list of category, corresponding to each message `['label1', 'label2', ...]`
+* `use_model`: True/False; if True, will train the model on the top of the pre-trained model
+* `save_model`: True/False; if True, will save the model
+
 ```python
 data, labels = load_data("data/trainingSet.json")
 classifier = MessageClassifier()
 classifier.train(data, labels, use_model=True)
 ```
-Test on new messages
+**Test on new messages**
 ```python
 new_messages = ["how to save more money?", "how to spend less in credit card?"]
 classifier.predict(new_messages)
