@@ -32,7 +32,7 @@ class MessageClassifier:
     @staticmethod
     def _validate(data: list):
         """Convert all entries in the list to string"""
-        return [str(entry) for entry in data]
+        return [str(entry).lower() for entry in data]
 
     def _prepare_data(self, classifier, data, labels):
         """split data into train/test dataset for model"""
