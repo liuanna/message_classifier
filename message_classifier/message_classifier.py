@@ -29,6 +29,11 @@ class MessageClassifier:
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
 
+    @staticmethod
+    def _validate(data: list):
+        """Convert all entries in the list to string"""
+        return [str(entry) for entry in data]
+
     def _prepare_data(self, classifier, data, labels):
         """split data into train/test dataset for model"""
         converted_labels = [{cat: False for cat in classifier.labels} for _ in labels]
@@ -56,9 +61,9 @@ class MessageClassifier:
             textcat = nlp.get_pipe("textcat")
         return nlp, textcat
 
-    def train(self, data: list, labels: list, use_model: bool = True, save_model: bool = True):
+    def _train(self, data: list, labels: list, use_model: bool = True, save_model: bool = True):
         """
-        Train a message classifier
+        Private method for training a message classifier
         :param data: list
             a list of strings (ex. ['message1', 'message2', ...])
         :param labels: list
@@ -69,6 +74,11 @@ class MessageClassifier:
             If True, the trained model will be saved to disk
         """
         assert len(data) == len(labels), f"data ({len(data)}) and labels ({len(labels)}) have inconsistent length"
+
+        # validate data and labels to be a list of strings
+        data = self._validate(data)
+        labels = self._validate(labels)
+
         nlp, textcat = self._load_model(use_model)
         # add new label to text classifier
         for label in set(labels):
@@ -80,7 +90,7 @@ class MessageClassifier:
 
         optimizer = nlp.begin_training()
         print("Training the model...")
-        print("{:^5}\t{:^5}\t{:^5}\t{:^5}".format("LOSS", "P", "R", "F"))
+        print("{:^5}\t{:^5}\t{:^5}\t{:^5}".format("Loss", "Precision", "Recall", "F1 Score"))
         batch_sizes = compounding(4.0, 32.0, 1.001)
         for i in range(self.n_iter):
             losses = {}
@@ -104,6 +114,20 @@ class MessageClassifier:
         if save_model:
             self._save(nlp, optimizer.averages)
 
+    def train(self, data: list, labels: list, use_model: bool = True, save_model: bool = True):
+        """
+        Train a message classifier
+        :param data: list
+            a list of strings (ex. ['message1', 'message2', ...])
+        :param labels: list
+            a list of labels corresponding to each entry of data, must be same length as data (ex. ['label1', 'label2', ...])
+        :param use_model: bool; default True
+            Use existing model if available
+        :param save_model: bool; default True
+            If True, the trained model will be saved to disk
+        """
+        self._train(data, labels, use_model, save_model)
+
     def _save(self, model, parameters):
         """save model to disk"""
         if self.model_path is not None:
@@ -121,9 +145,9 @@ class MessageClassifier:
         f_score = f1_score(true_labels, predictions, average="weighted")
         return {"textcat_p": precision, "textcat_r": recall, "textcat_f": f_score}
 
-    def predict(self, new_messages: list):
+    def _predict(self, new_messages: list):
         """
-        Predict on new messages
+        Private method for predicting on new messages
         :param new_messages: list
             a list of new messages for predictions
         :return: list
@@ -132,3 +156,13 @@ class MessageClassifier:
         nlp = spacy.load(self.model_path)
         predictions = [max(doc.cats, key=doc.cats.get) for doc in nlp.pipe(new_messages)]
         return predictions
+
+    def predict(self, new_messages: list):
+        """
+        Predict on new messages
+        :param new_messages: list
+            a list of new messages for predictions
+        :return: list
+            a list of predicted categories corresponding each input new message
+        """
+        return self._predict(new_messages)
