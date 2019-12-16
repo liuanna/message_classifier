@@ -1,7 +1,7 @@
 # Message Classifier
 
 ## Intro
-**Goal:** To use Machine Learning models to classify messages into specific categories (shown below)
+**Goal:** To use a [machine learning model](https://spacy.io/usage/training#section-textcat) to classify messages into specific categories (shown below)
 
 Available categories:
 ```markdown
@@ -59,7 +59,7 @@ Parameters:
 ```python
 data, labels = load_data("data/trainingSet.json")
 classifier = MessageClassifier(n_iter=20)
-classifier.train(data, labels, use_model=True)
+classifier.train(data, labels, use_model=False)
 ```
 **Test on new messages**
 ```python
